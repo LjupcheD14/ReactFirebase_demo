@@ -1,6 +1,6 @@
 import React, {useState} from 'react'
 import app from "../firebaseConf"
-import {getDatabase, ref, get} from "firebase/database"
+import {getDatabase, ref, get, remove} from "firebase/database"
 import {useNavigate} from "react-router-dom";
 
 function UpdateRead() {
@@ -13,7 +13,7 @@ function UpdateRead() {
         const db = getDatabase(app);
         const dbRef = ref(db, "nature/fruits");
         const snapshot = await get(dbRef);
-        if(snapshot.exists()){
+        if (snapshot.exists()) {
 
             const myData = snapshot.val();
             const temporaryArray = Object.keys(myData).map(myFireId => {
@@ -29,6 +29,13 @@ function UpdateRead() {
         }
     }
 
+    const deleteFruit = async (fruitIdParam) => {
+        const db = getDatabase(app);
+        const dbRef = ref(db, "nature/fruits/" + fruitIdParam);
+        await remove(dbRef);
+        window.location.reload();
+    }
+
     return (
         <div>
             <h1>UPDATE</h1>
@@ -37,11 +44,13 @@ function UpdateRead() {
                 {fruitArray.map((item, index) => (
                     <li key={index}>
                         {item.fruitName}: {item.fruitDefinition} : {item.fruitId}
-                        <button className='button1' onClick={ () => navigate(`/updatewrite/${item.fruitId}`)}>UPDATE</button>
+                        <button className='button1' onClick={() => navigate(`/updatewrite/${item.fruitId}`)}>UPDATE
+                        </button>
+                        <button className='button1' onClick={() => deleteFruit(item.fruitId)}>DELETE</button>
                     </li>
                 ))}
             </ul>
-            <button className='button1' onClick={ () => navigate("/")}>HOME PAGE</button>
+            <button className='button1' onClick={() => navigate("/")}>HOME PAGE</button>
             <button className='button1' onClick={() => navigate("/read")}>READ PAGE</button>
         </div>
     )
