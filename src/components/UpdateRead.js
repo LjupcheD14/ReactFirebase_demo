@@ -37,6 +37,7 @@ function UpdateRead() {
                 {fruitArray.map((item, index) => (
                     <li key={index}>
                         {item.fruitName}: {item.fruitDefinition} : {item.fruitId}
+                        <button className='button1' onClick={ () => navigate(`/updatewrite/${item.fruitId}`)}>UPDATE</button>
                     </li>
                 ))}
             </ul>
